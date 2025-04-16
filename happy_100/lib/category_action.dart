@@ -10,6 +10,7 @@ class CategoryAction extends Action {
     required super.desc,
     required super.imageUrl,
     required this.categoryId,
+    required super.type,
   });
 
   @override

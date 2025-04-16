@@ -25,6 +25,7 @@ class Category {
         desc: action.desc,
         imageUrl: action.imageUrl,
         categoryId: id,
+        type: action.type
       );
     }).toList();
   }

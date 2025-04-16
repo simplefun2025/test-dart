@@ -16,6 +16,7 @@ void main() {
         desc: 'test',
         imageUrl: 'test',
         category: 'test',
+        type: 1,
       ),
       Action(
         id: 2,
@@ -23,6 +24,7 @@ void main() {
         desc: 'test2',
         imageUrl: 'test2',
         category: 'test2',
+        type: 1,
       ),
       Action(
         id: 3,
@@ -30,6 +32,7 @@ void main() {
         desc: 'test3',
         imageUrl: 'test3',
         category: 'test2',
+        type: 2,
       ),
     ];
 
@@ -46,6 +49,7 @@ void main() {
             desc: 'test',
             imageUrl: 'test',
             category: 'test',
+            type: 1,
           ),
         ],
       ),

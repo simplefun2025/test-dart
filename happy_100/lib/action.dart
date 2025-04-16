@@ -4,6 +4,7 @@ class Action {
   final String title;
   final String desc;
   final String imageUrl;
+  final int type;
 
   Action({
     required this.id,
@@ -11,6 +12,7 @@ class Action {
     required this.title,
     required this.desc,
     required this.imageUrl,
+    required this.type,
   });
 
   @override
@@ -22,11 +24,12 @@ class Action {
         other.category == category &&
         other.title == title &&
         other.desc == desc &&
-        other.imageUrl == imageUrl;
+        other.imageUrl == imageUrl &&
+        other.type == type;
   }
 
   @override
   int get hashCode {
-    return Object.hash(id, category, title, desc, imageUrl);
+    return Object.hash(id, category, title, desc, imageUrl, type);
   }
 }
