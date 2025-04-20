@@ -1,6 +1,6 @@
-import 'package:happy_100/actions.dart';
-import 'package:happy_100/action.dart';
-import 'package:happy_100/category.dart';
+import 'package:happy_100/data/models/actions.dart';
+import 'package:happy_100/data/models/action.dart';
+import 'package:happy_100/data/models/category.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -53,17 +53,11 @@ void main() {
           ),
         ],
       ),
-      Category(
-        id: 2,
-        name: 'test2',
-        actions: [
-          ...actionList,
-        ],
-      ),
+      Category(id: 2, name: 'test2', actions: [...actionList]),
     ];
   });
 
-  group ('01. 카테고리 생성', () {
+  group('01. 카테고리 생성', () {
     test('01) 행동 목록 조회', () {
       var selectActions = actions.select();
       expect(selectActions.length, 3);
@@ -79,11 +73,7 @@ void main() {
       expect(selectActions.length, 2);
       expect(selectActions[0].id, 2);
 
-      var category = Category(
-        id: 1,
-        name: 'test',
-        actions: selectActions,
-      );
+      var category = Category(id: 1, name: 'test', actions: selectActions);
 
       expect(category.id, 1);
       expect(category.name, 'test');
@@ -94,7 +84,7 @@ void main() {
   });
 
   group('02. 카테고리 수정', () {
-    test('01) 카테고리 조회 및 상세내용 조회', (){
+    test('01) 카테고리 조회 및 상세내용 조회', () {
       var category = categories[1];
       expect(category.id, 2);
       expect(category.name, 'test2');
