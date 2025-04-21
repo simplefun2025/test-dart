@@ -1,4 +1,4 @@
-import 'package:happy_100/data/database.dart';
+import 'package:happy_100/domain/context/database.dart';
 
 void main() async {
   final database = AppDatabase();

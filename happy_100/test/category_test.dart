@@ -1,6 +1,6 @@
-import 'package:happy_100/data/models/actions.dart';
-import 'package:happy_100/data/models/action.dart';
-import 'package:happy_100/data/models/category.dart';
+import 'package:happy_100/domain/dtos/actions.dart';
+import 'package:happy_100/domain/dtos/action.dart';
+import 'package:happy_100/domain/dtos/category.dart';
 import 'package:test/test.dart';
 
 void main() {
