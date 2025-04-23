@@ -1,82 +1,60 @@
-import 'package:drift/drift.dart';
-import '../context/database.dart';
-
-class CategoryWithActions {
-  final Category category;
-  final List<CategoryAction> actions;
-
-  CategoryWithActions({required this.category, required this.actions});
-}
+import '../entities/category.dart';
+import '../entities/action.dart';
+import '../repositories/category_repository.dart';
 
 class CategoryService {
-  final AppDatabase _db;
+  final CategoryRepository _repository;
 
-  CategoryService(this._db);
+  CategoryService(this._repository);
 
-  // Create
-  Future<int> createCategory(
-    CategoriesCompanion category,
-    List<int> actionIds,
-  ) async {
-    return await _db.transaction(() async {
-      // Create the category first
-      final categoryId = await _db.into(_db.categories).insert(category);
-
-      // Create category actions for each action ID
-      for (final actionId in actionIds) {
-        await _db
-            .into(_db.categoryActions)
-            .insert(
-              CategoryActionsCompanion(
-                categoryId: Value(categoryId),
-                actionId: Value(actionId),
-              ),
-            );
-      }
-
-      return categoryId;
-    });
+  /// 카테고리 생성
+  Future<Categories> createCategory({
+    required String name,
+    String? description,
+    required List<Actions> actions,
+  }) async {
+    return await _repository.createCategory(
+      name: name,
+      description: description,
+      actions: actions,
+    );
   }
 
-  // Read
-  Future<List<CategoryWithActions>> getAllCategories() async {
-    final categories = await _db.select(_db.categories).get();
-    final result = <CategoryWithActions>[];
-
-    for (final category in categories) {
-      final actions = await _db.select(_db.categoryActions)
-        ..where((tbl) => tbl.categoryId.equals(category.id));
-
-      result.add(
-        CategoryWithActions(category: category, actions: await actions.get()),
-      );
-    }
-
-    return result;
+  /// 카테고리 수정
+  Future<Categories> updateCategory({
+    required int id,
+    required String name,
+    String? description,
+    required List<Actions> actions,
+  }) async {
+    return await _repository.updateCategory(
+      id: id,
+      name: name,
+      description: description,
+      actions: actions,
+    );
   }
 
-  Future<CategoryWithActions?> getCategoryById(int id) async {
-    final category =
-        await (_db.select(_db.categories)
-          ..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
-
-    if (category == null) return null;
-
-    final actions =
-        await (_db.select(_db.categoryActions)
-          ..where((tbl) => tbl.categoryId.equals(id))).get();
-
-    return CategoryWithActions(category: category, actions: actions);
+  /// 카테고리 삭제
+  Future<void> deleteCategory(int id) async {
+    await _repository.deleteCategory(id);
   }
 
-  // Update
-  Future<bool> updateCategory(CategoriesCompanion category) async {
-    return await _db.update(_db.categories).replace(category);
+  /// 카테고리 예약
+  Future<void> reserveCategory({
+    required int categoryId,
+    required DateTime date,
+  }) async {
+    await _repository.reserveCategory(categoryId: categoryId, date: date);
   }
 
-  // Delete
-  Future<int> deleteCategory(int id) async {
-    return await (_db.delete(_db.categories)
-      ..where((tbl) => tbl.id.equals(id))).go();
+  /// 카테고리 목록 조회
+  Future<List<Categories>> getCategories() async {
+    return await _repository.getCategories();
+  }
+
+  /// 카테고리 상세 조회
+  Future<Categories> getCategory(int id) async {
+    return await _repository.getCategory(id);
   }
 }

@@ -1,38 +1,54 @@
-import '../context/database.dart';
+import '../entities/record.dart';
+import '../repositories/record_repository.dart';
 
 class RecordService {
-  final AppDatabase _db;
+  final RecordRepository _repository;
 
-  RecordService(this._db);
+  RecordService(this._repository);
 
-  // Create
-  Future<int> createRecord(RecordsCompanion record) async {
-    return await _db.into(_db.records).insert(record);
+  /// 기록 생성
+  Future<Records> createRecord({
+    required int actionId,
+    int? memoId,
+    required DateTime date,
+  }) async {
+    return await _repository.createRecord(
+      actionId: actionId,
+      memoId: memoId,
+      date: date,
+    );
   }
 
-  // Read
-  Future<List<Record>> getAllRecords() async {
-    return await _db.select(_db.records).get();
+  /// 기록 조회
+  Future<Records> getRecord(int id) async {
+    return await _repository.getRecord(id);
   }
 
-  Future<Record?> getRecordById(int id) async {
-    return await (_db.select(_db.records)
-      ..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  /// 기록 목록 조회
+  Future<List<Records>> getRecords({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    return await _repository.getRecords(startDate: startDate, endDate: endDate);
   }
 
-  Future<List<Record>> getRecordsByActionId(int actionId) async {
-    return await (_db.select(_db.records)
-      ..where((tbl) => tbl.actionId.equals(actionId))).get();
+  /// 기록 수정
+  Future<Records> updateRecord({
+    required int id,
+    required int actionId,
+    int? memoId,
+    required DateTime date,
+  }) async {
+    return await _repository.updateRecord(
+      id: id,
+      actionId: actionId,
+      memoId: memoId,
+      date: date,
+    );
   }
 
-  // Update
-  Future<bool> updateRecord(RecordsCompanion record) async {
-    return await _db.update(_db.records).replace(record);
-  }
-
-  // Delete
-  Future<int> deleteRecord(int id) async {
-    return await (_db.delete(_db.records)
-      ..where((tbl) => tbl.id.equals(id))).go();
+  /// 기록 삭제
+  Future<void> deleteRecord(int id) async {
+    await _repository.deleteRecord(id);
   }
 }

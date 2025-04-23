@@ -1,0 +1,33 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Dart 의존성 지침
+globs: *
+---
+
+# Flutter 의존성은 제외한다.
+- Flutter 의존성은 제외한다.
+
+# HTTP 통신 지침
+- HTTP 통신은 http를 사용하세요
+- HTTP 상태(loading, success, error)를 관리하세요
+- JSON 데이터를 freezed 패키지를 통해 dart object로 변경하세요
+- API 연결 실패를 대비한 error handling 기능을 생성하세요.
+
+# 데이터베이스 관리 지침
+- 로컬 데이터베이스는 drift를 사용합니다.
+- drift에서 n+1은 방지합니다.
+- database 설정은 /core/services에 생성합니다.
+- domain은 아래와 같이 폴더 구조를 구성하며 table class명은 table을 포함하지 않습니다.
+  '''
+    domain/     # 도메인 레이어
+        entities/     # 도메인 엔티티
+        repositories/ # 도메인 리포지토리 인터페이스
+        services/     # 비즈니스 로직
+  '''
+
+# 테스트 관리 지침
+- 유닛테스트는 test를 사용합니다.
