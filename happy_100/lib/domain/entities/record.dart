@@ -5,4 +5,6 @@ class Records extends Table {
   IntColumn get actionId => integer()();
   IntColumn get memoId => integer().nullable()();
   DateTimeColumn get date => dateTime()();
+  DateTimeColumn get createdAt =>
+      dateTime().clientDefault(() => DateTime.now())();
 }

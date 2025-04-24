@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:happy_100/core/services/database.dart';
 
@@ -14,29 +15,38 @@ void main() {
   });
 
   group('CategoryActions 테이블 테스트', () {
-    test('카테고리 액션 생성 및 조회', () async {
-      final now = DateTime.now();
-      final categoryAction = CategoryAction(
-        id: 0,
+    test('기본 카테고리-액션 관계 생성 및 조회', () async {
+      final companion = CategoryActionsCompanion.insert(
         categoryId: 1,
         actionId: 1,
-        createdAt: now,
-        updatedAt: now,
-      );
-
-      final companion = CategoryActionsCompanion.insert(
-        categoryId: categoryAction.categoryId,
-        actionId: categoryAction.actionId,
-        createdAt: categoryAction.createdAt,
-        updatedAt: categoryAction.updatedAt,
       );
 
       final id = await db.into(db.categoryActions).insert(companion);
       final result = await db.select(db.categoryActions).getSingle();
 
       expect(result.id, equals(id));
-      expect(result.categoryId, equals(categoryAction.categoryId));
-      expect(result.actionId, equals(categoryAction.actionId));
+      expect(result.categoryId, equals(1));
+      expect(result.actionId, equals(1));
+      expect(result.createdAt, isNotNull);
+      expect(result.deletedAt, isNull);
+    });
+
+    test('삭제된 카테고리-액션 관계 생성', () async {
+      final now = DateTime.now();
+      final companion = CategoryActionsCompanion.insert(
+        categoryId: 1,
+        actionId: 1,
+        deletedAt: Value(now),
+      );
+
+      final id = await db.into(db.categoryActions).insert(companion);
+      final result = await db.select(db.categoryActions).getSingle();
+
+      expect(result.id, equals(id));
+      expect(result.categoryId, equals(1));
+      expect(result.actionId, equals(1));
+      expect(result.createdAt, isNotNull);
+      expect(result.deletedAt, equals(now));
     });
   });
 }

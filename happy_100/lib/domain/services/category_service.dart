@@ -1,5 +1,4 @@
-import '../entities/category.dart';
-import '../entities/action.dart';
+import '/core/services/database.dart';
 import '../repositories/category_repository.dart';
 
 class CategoryService {
@@ -8,10 +7,10 @@ class CategoryService {
   CategoryService(this._repository);
 
   /// 카테고리 생성
-  Future<Categories> createCategory({
+  Future<Category> createCategory({
     required String name,
     String? description,
-    required List<Actions> actions,
+    required List<Action> actions,
   }) async {
     return await _repository.createCategory(
       name: name,
@@ -21,11 +20,11 @@ class CategoryService {
   }
 
   /// 카테고리 수정
-  Future<Categories> updateCategory({
+  Future<Category> updateCategory({
     required int id,
     required String name,
     String? description,
-    required List<Actions> actions,
+    required List<Action> actions,
   }) async {
     return await _repository.updateCategory(
       id: id,
@@ -49,12 +48,12 @@ class CategoryService {
   }
 
   /// 카테고리 목록 조회
-  Future<List<Categories>> getCategories() async {
+  Future<List<Category>> getCategories() async {
     return await _repository.getCategories();
   }
 
   /// 카테고리 상세 조회
-  Future<Categories> getCategory(int id) async {
+  Future<Category> getCategory(int id) async {
     return await _repository.getCategory(id);
   }
 }

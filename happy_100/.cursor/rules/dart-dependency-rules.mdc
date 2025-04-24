@@ -5,11 +5,12 @@ alwaysApply: true
 ---
 ---
 description: Dart 의존성 지침
-globs: *
+globs: ["**/*"]
+alwaysApply: true
 ---
 
-# Flutter 의존성은 제외한다.
-- Flutter 의존성은 제외한다.
+# Flutter 의존성은 무조건 제외한다.
+- Flutter 의존성은 무조건 제외한다.
 
 # HTTP 통신 지침
 - HTTP 통신은 http를 사용하세요

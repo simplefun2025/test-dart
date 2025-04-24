@@ -5,7 +5,8 @@ alwaysApply: true
 ---
 ---
 description: Dart 코딩 지침
-globs: *
+globs: ["**/*"]
+alwaysApply: true
 ---
 
 # 언어 지침

@@ -1,4 +1,4 @@
-import '../entities/record.dart';
+import '/core/services/database.dart';
 import '../repositories/record_repository.dart';
 
 class RecordService {
@@ -7,7 +7,7 @@ class RecordService {
   RecordService(this._repository);
 
   /// 기록 생성
-  Future<Records> createRecord({
+  Future<Record> createRecord({
     required int actionId,
     int? memoId,
     required DateTime date,
@@ -20,12 +20,12 @@ class RecordService {
   }
 
   /// 기록 조회
-  Future<Records> getRecord(int id) async {
+  Future<Record> getRecord(int id) async {
     return await _repository.getRecord(id);
   }
 
   /// 기록 목록 조회
-  Future<List<Records>> getRecords({
+  Future<List<Record>> getRecords({
     DateTime? startDate,
     DateTime? endDate,
   }) async {
@@ -33,7 +33,7 @@ class RecordService {
   }
 
   /// 기록 수정
-  Future<Records> updateRecord({
+  Future<Record> updateRecord({
     required int id,
     required int actionId,
     int? memoId,
