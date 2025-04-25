@@ -20,9 +20,26 @@ alwaysApply: true
 
 # 데이터베이스 관리 지침
 - 로컬 데이터베이스는 drift를 사용합니다.
-- drift에서 n+1은 방지합니다.
+- drift에서 manager만 사용합니다.
+- drift에서 n+1 select 쿼리를 방지합니다.
 - database 설정은 /core/services에 생성합니다.
+- database는 entity와 repository 그리고 service로 나누어 관리합니다.
+- entity는 테이블 설정을 생성하는 폴더입니다.
+- repository는 entity들의 create, read, update, delete 메서드를 생성하는 폴더입니다. transaction은 사용하지 않습니다.
+- service는 repository들을 조합하여 기능을 생성하는 폴더이며 transaction을 사용합니다.
 - domain은 아래와 같이 폴더 구조를 구성하며 table class명은 table을 포함하지 않습니다.
+
+기능의 단일성(Single Responsibility)에 대해 설명드리겠습니다.
+기능의 단일성은 SOLID 원칙 중 첫 번째 원칙인 단일 책임 원칙(Single Responsibility Principle, SRP)을 의미합니다. 이는 소프트웨어 설계에서 매우 중요한 개념입니다.
+핵심 개념
+하나의 목적
+하나의 클래스/함수는 단 하나의 책임만을 가져야 합니다
+변경해야 하는 이유가 오직 하나여야 합니다
+응집도
+관련된 기능들은 함께 모여있어야 합니다
+서로 무관한 기능들은 분리되어야 합니다
+
+
   '''
     domain/     # 도메인 레이어
         entities/     # 도메인 엔티티

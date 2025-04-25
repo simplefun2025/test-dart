@@ -3,8 +3,9 @@ import '../repositories/record_repository.dart';
 
 class RecordService {
   final RecordRepository _repository;
+  final AppDatabase _db;
 
-  RecordService(this._repository);
+  RecordService(this._db, this._repository);
 
   /// 기록 생성
   Future<Record> createRecord({
@@ -12,11 +13,13 @@ class RecordService {
     int? memoId,
     required DateTime date,
   }) async {
-    return await _repository.createRecord(
-      actionId: actionId,
-      memoId: memoId,
-      date: date,
-    );
+    return await _db.transaction(() async {
+      return await _repository.createRecord(
+        actionId: actionId,
+        memoId: memoId,
+        date: date,
+      );
+    });
   }
 
   /// 기록 조회
@@ -39,16 +42,20 @@ class RecordService {
     int? memoId,
     required DateTime date,
   }) async {
-    return await _repository.updateRecord(
-      id: id,
-      actionId: actionId,
-      memoId: memoId,
-      date: date,
-    );
+    return await _db.transaction(() async {
+      return await _repository.updateRecord(
+        id: id,
+        actionId: actionId,
+        memoId: memoId,
+        date: date,
+      );
+    });
   }
 
   /// 기록 삭제
   Future<void> deleteRecord(int id) async {
-    await _repository.deleteRecord(id);
+    await _db.transaction(() async {
+      await _repository.deleteRecord(id);
+    });
   }
 }

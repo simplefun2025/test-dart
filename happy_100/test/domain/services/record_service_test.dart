@@ -13,7 +13,7 @@ void main() {
   setUp(() {
     db = AppDatabase(NativeDatabase.memory());
     repository = RecordRepository(db);
-    service = RecordService(repository);
+    service = RecordService(db, repository);
   });
 
   tearDown(() {
