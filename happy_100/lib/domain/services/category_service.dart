@@ -1,17 +1,19 @@
-import '../repositories/category_action_repository.dart';
 import '/core/services/database.dart';
+import '../repositories/category_action_repository.dart';
 import '../repositories/category_repository.dart';
 
 class CategoryService {
+  final AppDatabase _db;
   final CategoryRepository _categoryRepository;
   final CategoryActionRepository _categoryActionRepository;
-  final AppDatabase _db;
 
-  CategoryService(
-    this._db,
-    this._categoryRepository,
-    this._categoryActionRepository,
-  );
+  CategoryService({
+    required AppDatabase db,
+    required CategoryRepository categoryRepository,
+    required CategoryActionRepository categoryActionRepository,
+  }) : _db = db,
+       _categoryRepository = categoryRepository,
+       _categoryActionRepository = categoryActionRepository;
 
   /// 카테고리 생성
   Future<int> createCategory({
@@ -66,6 +68,13 @@ class CategoryService {
   Future<void> deleteCategory(int id) async {
     await _db.transaction(() async {
       await _categoryRepository.deleteCategory(id);
+    });
+  }
+
+  /// 카테고리 전체 삭제
+  Future<void> deleteAllCategories() async {
+    await _db.transaction(() async {
+      await _categoryRepository.deleteAllCategories();
     });
   }
 

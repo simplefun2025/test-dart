@@ -8,52 +8,34 @@ class RecordRepository {
   RecordRepository(this._db);
 
   /// 기록 생성
-  Future<Record> createRecord({
+  Future<int> createRecord({
     required int actionId,
     int? memoId,
     required DateTime date,
   }) async {
-    final recordId = await _db
-        .into(_db.records)
-        .insert(
-          RecordsCompanion.insert(
-            actionId: actionId,
-            memoId: Value(memoId),
-            date: DateTime.now(),
-          ),
-        );
+    final recordId = await _db.managers.records.create(
+      (obj) => obj(actionId: actionId, memoId: Value(memoId), date: date),
+    );
 
-    final record = await getRecord(recordId);
-    return record;
+    return recordId;
   }
 
   /// 기록 조회
   Future<Record> getRecord(int id) async {
     final record =
-        await (_db.select(_db.records)
-          ..where((t) => t.id.equals(id))).getSingleOrNull();
-
-    if (record == null) {
-      throw Exception('Record not found');
-    }
+        await _db.managers.records.filter((f) => f.id.equals(id)).getSingle();
 
     return record;
   }
 
   /// 기록 목록 조회
   Future<List<Record>> getRecords({
-    DateTime? startDate,
-    DateTime? endDate,
+    required DateTime startDate,
+    required DateTime endDate,
   }) async {
-    var query = _db.select(_db.records);
-
-    if (startDate != null) {
-      query.where((t) => t.date.isBiggerOrEqualValue(startDate));
-    }
-
-    if (endDate != null) {
-      query.where((t) => t.date.isSmallerOrEqualValue(endDate));
-    }
+    var query = _db.managers.records.filter(
+      (f) => f.date.isBetween(startDate, endDate),
+    );
 
     return await query.get();
   }
@@ -65,9 +47,15 @@ class RecordRepository {
     int? memoId,
     required DateTime date,
   }) async {
-    await (_db.update(_db.records)..where((t) => t.id.equals(id))).write(
-      RecordsCompanion(actionId: Value(actionId), memoId: Value(memoId)),
-    );
+    await _db.managers.records
+        .filter((f) => f.id.equals(id))
+        .update(
+          (obj) => obj(
+            actionId: Value(actionId),
+            memoId: Value(memoId),
+            date: Value(date),
+          ),
+        );
 
     final record = await getRecord(id);
     return record;
@@ -75,6 +63,11 @@ class RecordRepository {
 
   /// 기록 삭제
   Future<void> deleteRecord(int id) async {
-    await (_db.delete(_db.records)..where((t) => t.id.equals(id))).go();
+    await _db.managers.records.filter((f) => f.id.equals(id)).delete();
+  }
+
+  /// 기록 전체 삭제
+  Future<void> deleteAllRecords() async {
+    await _db.managers.records.delete();
   }
 }

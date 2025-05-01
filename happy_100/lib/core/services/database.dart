@@ -12,7 +12,7 @@ part 'database.g.dart';
 
 @DriftDatabase(tables: [Records, Actions, Memos, Categories, CategoryActions])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase(QueryExecutor e) : super(e);
+  AppDatabase(QueryExecutor? executor) : super(executor ?? _openConnection());
 
   @override
   int get schemaVersion => 1;
@@ -20,7 +20,7 @@ class AppDatabase extends _$AppDatabase {
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
-    final dbFolder = 'C:/Users/user/Desktop/happy_100/happy_100/';
+    final dbFolder = 'D:/project/test-dart/happy_100/db/';
     final file = File(p.join(dbFolder, 'happy_100.db'));
     return NativeDatabase.createInBackground(file);
   });

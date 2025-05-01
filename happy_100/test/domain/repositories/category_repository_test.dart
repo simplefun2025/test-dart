@@ -53,7 +53,10 @@ void main() {
 
       await repository.deleteCategory(categoryId);
 
-      expect(() => repository.getCategory(categoryId), throwsException);
+      expect(
+        () => repository.getCategory(categoryId),
+        throwsA(isA<StateError>()),
+      );
     });
 
     test('카테고리 목록 조회', () async {

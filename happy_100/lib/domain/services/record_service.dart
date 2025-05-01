@@ -5,7 +5,9 @@ class RecordService {
   final RecordRepository _repository;
   final AppDatabase _db;
 
-  RecordService(this._db, this._repository);
+  RecordService({required AppDatabase db, required RecordRepository repository})
+    : _db = db,
+      _repository = repository;
 
   /// 기록 생성
   Future<Record> createRecord({
@@ -14,11 +16,13 @@ class RecordService {
     required DateTime date,
   }) async {
     return await _db.transaction(() async {
-      return await _repository.createRecord(
+      final recordId = await _repository.createRecord(
         actionId: actionId,
         memoId: memoId,
         date: date,
       );
+
+      return await getRecord(recordId);
     });
   }
 
@@ -29,8 +33,8 @@ class RecordService {
 
   /// 기록 목록 조회
   Future<List<Record>> getRecords({
-    DateTime? startDate,
-    DateTime? endDate,
+    required DateTime startDate,
+    required DateTime endDate,
   }) async {
     return await _repository.getRecords(startDate: startDate, endDate: endDate);
   }
@@ -56,6 +60,12 @@ class RecordService {
   Future<void> deleteRecord(int id) async {
     await _db.transaction(() async {
       await _repository.deleteRecord(id);
+    });
+  }
+
+  Future<void> deleteAllRecords() async {
+    await _db.transaction(() async {
+      await _repository.deleteAllRecords();
     });
   }
 }

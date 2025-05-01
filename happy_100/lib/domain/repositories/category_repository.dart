@@ -19,6 +19,23 @@ class CategoryRepository {
     return categoryId;
   }
 
+  /// 카테고리 목록 조회
+  Future<List<Category>> getCategories() async {
+    return await _db.managers.categories
+        .filter((f) => f.deletedAt.isNull())
+        .get();
+  }
+
+  /// 카테고리 상세 조회
+  Future<Category> getCategory(int id) async {
+    final category =
+        await _db.managers.categories
+            .filter((f) => f.id.equals(id) & f.deletedAt.isNull())
+            .getSingle();
+
+    return category;
+  }
+
   /// 카테고리 수정
   Future<Category> updateCategory({
     required int id,
@@ -42,24 +59,10 @@ class CategoryRepository {
         .update((obj) => obj(deletedAt: Value(DateTime.now())));
   }
 
-  /// 카테고리 목록 조회
-  Future<List<Category>> getCategories() async {
-    return await _db.managers.categories
+  /// 카테고리 전체 삭제
+  Future<void> deleteAllCategories() async {
+    await _db.managers.categories
         .filter((f) => f.deletedAt.isNull())
-        .get();
-  }
-
-  /// 카테고리 상세 조회
-  Future<Category> getCategory(int id) async {
-    final category =
-        await _db.managers.categories
-            .filter((f) => f.id.equals(id) & f.deletedAt.isNull())
-            .getSingle();
-
-    if (category == null) {
-      throw Exception('Category not found');
-    }
-
-    return category;
+        .update((obj) => obj(deletedAt: Value(DateTime.now())));
   }
 }

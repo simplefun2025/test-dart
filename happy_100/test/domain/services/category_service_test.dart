@@ -1,25 +1,18 @@
 import 'package:test/test.dart';
-import 'package:drift/native.dart';
-import 'package:happy_100/core/services/database.dart';
-import 'package:happy_100/domain/repositories/category_repository.dart';
-import 'package:happy_100/domain/repositories/category_action_repository.dart';
 import 'package:happy_100/domain/services/category_service.dart';
+import 'package:happy_100/core/di/dependency_injection.dart';
 
 void main() {
-  late AppDatabase db;
-  late CategoryRepository categoryRepository;
-  late CategoryActionRepository categoryActionRepository;
   late CategoryService service;
 
+  dependencyInjectionSetup();
+
   setUp(() {
-    db = AppDatabase(NativeDatabase.memory());
-    categoryRepository = CategoryRepository(db);
-    categoryActionRepository = CategoryActionRepository(db);
-    service = CategoryService(db, categoryRepository, categoryActionRepository);
+    service = getIt<CategoryService>();
   });
 
-  tearDown(() {
-    db.close();
+  tearDown(() async {
+    await service.deleteAllCategories();
   });
 
   group('CategoryService 테스트', () {
@@ -62,7 +55,7 @@ void main() {
 
       await service.deleteCategory(categoryId);
 
-      expect(() => service.getCategory(categoryId), throwsException);
+      expect(() => service.getCategory(categoryId), throwsA(isA<StateError>()));
     });
 
     test('카테고리 목록 조회', () async {
